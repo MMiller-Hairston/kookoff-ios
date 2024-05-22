@@ -1,24 +1,21 @@
-//
-//  ContentView.swift
-//  kookoff
-//
-//  Created by Michael Miller on 5/12/24.
-//
-
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var authManager: AuthManager
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            VStack(spacing: 16) {
+                if authManager.authState != .signedOut {
+                    HomeView()
+                } else {
+                    LoginView()
+                }
+            }
         }
-        .padding()
     }
 }
 
 #Preview {
-    ContentView()
+    ContentView().environmentObject(AuthManager())
 }
