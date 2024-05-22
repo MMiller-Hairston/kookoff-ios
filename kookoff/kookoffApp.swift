@@ -23,7 +23,8 @@ struct kookoffApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView().environmentObject(authManager)
+            ContentView()
+                .environmentObject(authManager)
         }
     }
 }

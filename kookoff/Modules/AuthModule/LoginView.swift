@@ -1,7 +1,9 @@
 import AuthenticationServices
+import GoogleSignInSwift
 import SwiftUI
 
 struct LoginView: View {
+    @Environment(\.dismiss) var dismiss
     @EnvironmentObject var authManager: AuthManager
     
     var body: some View {
@@ -10,8 +12,13 @@ struct LoginView: View {
                 
                 Spacer()
                 
-                // Mark: - Anonymous
-                // Hide `Skip` button if user is anonymous.
+                GoogleSignInButton {
+                    Task {
+                        await signInWithGoogle()
+                    }
+                }
+                .frame(width: 280, height: 45, alignment: .center)
+                
                 if authManager.authState == .signedOut {
                     Button {
                         signInAnonymously()
@@ -35,6 +42,22 @@ struct LoginView: View {
             catch {
                 print("SignInAnonymouslyError: \(error)")
             }
+        }
+    }
+    
+    func signInWithGoogle() async {
+        do {
+            guard let user = try await GoogleSignInManager.shared.signInWithGoogle() else { return }
+            
+            let result = try await authManager.googleAuth(user)
+            if let result = result {
+                print("GoogleSignInSuccess: \(result.user.uid)")
+                dismiss()
+            }
+        }
+        catch {
+            print("GoogleSignInError: failed to sign in with Google. \(error)")
+            return
         }
     }
 }

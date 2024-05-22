@@ -5,17 +5,12 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            VStack(spacing: 16) {
-                if authManager.authState != .signedOut {
-                    HomeView()
-                } else {
-                    LoginView()
-                }
-            }
+            HomeView()
         }
     }
 }
 
 #Preview {
-    ContentView().environmentObject(AuthManager())
+    ContentView()
+        .environmentObject(AuthManager())
 }
